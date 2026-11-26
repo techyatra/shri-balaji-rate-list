@@ -40,13 +40,41 @@
   }
   .refresh-btn:active { background: var(--accent-soft); }
   .wrap { max-width: 100%; margin: 0 auto; padding: 0 10px; }
-  .search-bar { margin: 10px 0; }
+  .search-bar { margin: 10px 0; display: flex; gap: 8px; }
   .search-bar input {
-    width: 100%; padding: 11px 13px; font-size: 15px; border: 1.5px solid var(--line);
+    flex: 1; padding: 11px 13px; font-size: 15px; border: 1.5px solid var(--line);
     border-radius: 12px; outline: none; background: #fff;
   }
   .search-bar input:focus { border-color: var(--accent); }
+  .add-toggle-btn {
+    flex-shrink: 0; padding: 0 16px; font-size: 14px; font-weight: 700; border-radius: 12px;
+    border: none; background: var(--accent); color: #fff; cursor: pointer;
+  }
+  .add-toggle-btn:active { background: var(--accent-dark); }
   .stats { font-size: 12px; color: var(--muted); margin: 2px 2px 8px; }
+
+  .add-panel {
+    display: none; background: #fff; border: 1.5px solid var(--accent); border-radius: 12px;
+    padding: 14px; margin-bottom: 12px;
+  }
+  .add-panel.open { display: block; }
+  .add-panel h3 { margin: 0 0 10px; font-size: 14px; color: var(--accent-dark); }
+  .add-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 9px;
+  }
+  .add-grid label { font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 3px; }
+  .add-grid input {
+    width: 100%; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 13px;
+    padding: 8px 9px; border-radius: 8px; font-family: inherit; color: var(--ink);
+  }
+  .add-grid input:focus { border-color: var(--accent); background: #fff; outline: none; }
+  .add-actions { margin-top: 12px; display: flex; gap: 8px; align-items: center; }
+  .btn-add-submit { background: var(--ok-strong); color: #fff; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .btn-add-submit:disabled { opacity: .5; }
+  .btn-add-cancel { background: #fff; color: var(--muted); border: 1.5px solid var(--line); border-radius: 8px; padding: 9px 14px; font-size: 13px; cursor: pointer; }
+  .add-status { font-size: 12px; }
+  .add-status.ok { color: var(--ok-ink); }
+  .add-status.err { color: var(--err-ink); }
 
   .table-scroll {
     overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 10px;
@@ -134,6 +162,25 @@
 <div class="wrap">
   <div class="search-bar">
     <input id="searchBox" type="text" placeholder="Item ढूंढें... (Hindi/English/vendor)" autocomplete="off">
+    <button class="add-toggle-btn" id="addToggleBtn">+ Add Item</button>
+  </div>
+  <div class="add-panel" id="addPanel">
+    <h3>नया item जोड़ें</h3>
+    <div class="add-grid">
+      <div><label>Vendor</label><input id="add_vendor" placeholder="jaise: Baseda Anil ji"></div>
+      <div><label>Hindi Name</label><input id="add_item_hi"></div>
+      <div><label>English Name</label><input id="add_item_en"></div>
+      <div><label>Rate</label><input id="add_rate" inputmode="decimal"></div>
+      <div><label>Unit</label><input id="add_unit" placeholder="Kg / PKT / Box"></div>
+      <div><label>Amount</label><input id="add_amount" inputmode="decimal"></div>
+      <div><label>Selling Rate</label><input id="add_selling" inputmode="decimal"></div>
+      <div><label>Note</label><input id="add_note"></div>
+    </div>
+    <div class="add-actions">
+      <button class="btn-add-submit" id="addSubmitBtn">➕ Add Item</button>
+      <button class="btn-add-cancel" id="addCancelBtn">Cancel</button>
+      <span class="add-status" id="addStatus"></span>
+    </div>
   </div>
   <div class="stats" id="statsLine"></div>
   <div id="tableHost"><div class="loading">Loading…</div></div>
@@ -377,6 +424,76 @@ async function onVerifyRow(e) {
 
 document.getElementById('searchBox').addEventListener('input', (e) => render(e.target.value));
 document.getElementById('refreshBtn').addEventListener('click', () => loadData(true));
+
+const addPanel = document.getElementById('addPanel');
+const addToggleBtn = document.getElementById('addToggleBtn');
+const addCancelBtn = document.getElementById('addCancelBtn');
+const addSubmitBtn = document.getElementById('addSubmitBtn');
+const addStatus = document.getElementById('addStatus');
+
+function clearAddForm() {
+  ['add_vendor','add_item_hi','add_item_en','add_rate','add_unit','add_amount','add_selling','add_note']
+    .forEach(id => document.getElementById(id).value = '');
+  addStatus.textContent = '';
+  addStatus.className = 'add-status';
+}
+
+addToggleBtn.addEventListener('click', () => {
+  const opening = !addPanel.classList.contains('open');
+  addPanel.classList.toggle('open');
+  addToggleBtn.textContent = addPanel.classList.contains('open') ? '✕ Close' : '+ Add Item';
+  if (opening) document.getElementById('add_item_hi').focus();
+});
+
+addCancelBtn.addEventListener('click', () => {
+  addPanel.classList.remove('open');
+  addToggleBtn.textContent = '+ Add Item';
+  clearAddForm();
+});
+
+addSubmitBtn.addEventListener('click', async () => {
+  const vendor = document.getElementById('add_vendor').value.trim();
+  const item_hi = document.getElementById('add_item_hi').value.trim();
+  const item_en = document.getElementById('add_item_en').value.trim();
+  const rate = document.getElementById('add_rate').value.trim();
+  const unit = document.getElementById('add_unit').value.trim();
+  const amount = document.getElementById('add_amount').value.trim();
+  const selling = document.getElementById('add_selling').value.trim();
+  const note = document.getElementById('add_note').value.trim();
+
+  if (!item_hi && !item_en) {
+    addStatus.textContent = 'Kam se kam Hindi ya English naam bharein';
+    addStatus.className = 'add-status err';
+    return;
+  }
+
+  const qty = computeQty(rate, amount);
+  const values = [vendor, item_hi, item_en, rate, unit, amount, qty, '', selling, note, ''];
+
+  addSubmitBtn.disabled = true;
+  addStatus.textContent = 'Add ho raha hai…';
+  addStatus.className = 'add-status';
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'append', values: values })
+    });
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message || 'unknown error');
+    showToast('<b>' + esc(item_hi || item_en) + '</b> add ho gaya — Sheet me bhi save ho gaya', 'ok');
+    clearAddForm();
+    addPanel.classList.remove('open');
+    addToggleBtn.textContent = '+ Add Item';
+    await loadData(true);
+  } catch (err) {
+    addStatus.textContent = 'Error — dobara try karein';
+    addStatus.className = 'add-status err';
+    console.error(err);
+  } finally {
+    addSubmitBtn.disabled = false;
+  }
+});
 
 loadData(true);
 setInterval(() => loadData(false), 30000);
