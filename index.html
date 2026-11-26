@@ -52,7 +52,11 @@
     overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 10px;
     border: 1px solid var(--line); background: #fff;
   }
-  table { width: 100%; min-width: 980px; border-collapse: collapse; font-size: 12.5px; background: #fff; }
+  table { width: 100%; min-width: 1100px; border-collapse: collapse; font-size: 12.5px; background: #fff; table-layout: fixed; }
+  col.c-vendor { width: 110px; } col.c-hi { width: 120px; } col.c-en { width: 110px; }
+  col.c-rate { width: 70px; } col.c-unit { width: 60px; } col.c-amount { width: 80px; }
+  col.c-qty { width: 50px; } col.c-weight { width: 85px; } col.c-selling { width: 75px; }
+  col.c-note { width: 170px; } col.c-verify { width: 70px; } col.c-actions { width: 150px; }
   thead th {
     background: var(--head-bg); color: var(--head-ink); text-align: left;
     padding: 9px 7px; font-size: 11px; white-space: nowrap; font-weight: 700;
@@ -72,8 +76,8 @@
   .vendor-text { font-size: 10.5px; color: var(--muted); max-width: 140px; display: block; line-height: 1.3; }
 
   input.cell {
-    width: 100%; min-width: 68px; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 12.5px;
-    padding: 6px 7px; border-radius: 7px; font-family: inherit; color: var(--ink);
+    width: 100%; max-width: 100%; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 12.5px;
+    padding: 6px 6px; border-radius: 7px; font-family: inherit; color: var(--ink); overflow: hidden; text-overflow: ellipsis;
   }
   input.cell:focus { border-color: var(--accent); background: #fff; outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
   input.cell.changed { border-color: #d9a441; background: #fffaf0; }
@@ -84,8 +88,8 @@
   .badge.no { background: var(--ok-bg); color: var(--ok-ink); border: 1px solid #bfe3c9; }
   .badge.neutral { background: #eef1f2; color: var(--muted); border: 1px solid var(--line); }
 
-  .actions-cell { display: flex; flex-direction: row; gap: 5px; align-items: center; min-width: 150px; }
-  .btn { border: none; border-radius: 8px; font-size: 11.5px; font-weight: 700; padding: 7px 9px; cursor: pointer; white-space: nowrap; }
+  .actions-cell { display: flex; flex-direction: row; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .btn { border: none; border-radius: 7px; font-size: 10.5px; font-weight: 700; padding: 6px 7px; cursor: pointer; white-space: nowrap; }
   .btn-save { background: var(--accent); color: #fff; }
   .btn-save:active { background: var(--accent-dark); }
   .btn-save:disabled { opacity: .5; }
@@ -112,9 +116,8 @@
 
   @media (max-width: 760px) {
     header h1 { font-size: 14.5px; }
-    table { min-width: 880px; font-size: 11.5px; }
-    .actions-cell { min-width: 128px; }
-    .btn { padding: 7px 8px; font-size: 11px; }
+    table { min-width: 1000px; font-size: 11px; }
+    .btn { padding: 6px 7px; font-size: 10.5px; }
     .toast { font-size: 12.5px; }
   }
 </style>
@@ -229,7 +232,11 @@ function render(filterText) {
     return;
   }
 
-  let out = '<div class="table-scroll"><table><thead><tr>' +
+  let out = '<div class="table-scroll"><table>' +
+    '<colgroup><col class="c-vendor"><col class="c-hi"><col class="c-en"><col class="c-rate"><col class="c-unit">' +
+    '<col class="c-amount"><col class="c-qty"><col class="c-weight"><col class="c-selling"><col class="c-note">' +
+    '<col class="c-verify"><col class="c-actions"></colgroup>' +
+    '<thead><tr>' +
     '<th>Vendor</th><th>Hindi</th><th>English</th><th>Rate</th><th>Unit</th>' +
     '<th>Amount</th><th>Qty</th><th>Weight/Qty</th><th>Selling</th><th>Note</th><th>Verify</th><th>Actions</th>' +
     '</tr></thead><tbody>';
