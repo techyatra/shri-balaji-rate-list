@@ -14,84 +14,95 @@
     --err-bg:#fdeceb; --err-ink:#b3261e;
     --field-bg:#f6f8f9;
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: -apple-system, "Segoe UI", "Noto Sans Devanagari", Arial, sans-serif;
     color: var(--ink); background: #f2f5f6; margin: 0; padding: 0 0 60px;
   }
   header {
     background: linear-gradient(135deg,#eaf6f2,#eef3fb 55%,#fdf3e9);
-    padding: 16px 14px 14px; border-bottom: 1px solid var(--line);
-    position: sticky; top: 0; z-index: 5;
+    padding: 14px 12px 12px; border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 6;
   }
-  header h1 { margin: 0 0 3px; font-size: 18px; color: var(--accent-dark); line-height: 1.3; }
-  header .sub { color: var(--muted); font-size: 12px; margin-bottom: 10px; }
+  header h1 { margin: 0 0 3px; font-size: 16.5px; color: var(--accent-dark); line-height: 1.3; }
+  header .sub { color: var(--muted); font-size: 11.5px; margin-bottom: 9px; }
   .pill-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .sync-pill {
     display: inline-flex; align-items: center; gap: 6px;
-    border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 600;
+    border-radius: 999px; padding: 5px 12px; font-size: 11.5px; font-weight: 600;
   }
   .sync-pill.connecting { background: #eef3fb; color: var(--accent-dark); border: 1px solid #cfe0e6; }
   .sync-pill.online { background: var(--ok-bg); color: var(--ok-ink); border: 1px solid #bfe3c9; }
   .sync-pill.offline { background: var(--err-bg); color: var(--err-ink); border: 1px solid #f2c6c2; }
   .refresh-btn {
-    font-size: 12px; padding: 5px 12px; border-radius: 999px; font-weight: 600;
+    font-size: 11.5px; padding: 5px 12px; border-radius: 999px; font-weight: 600;
     border: 1px solid var(--accent); background: #fff; cursor: pointer; color: var(--accent-dark);
   }
   .refresh-btn:active { background: var(--accent-soft); }
-  .wrap { max-width: 1500px; margin: 0 auto; padding: 0 12px; }
-  .search-bar { margin: 12px 0; }
+  .wrap { max-width: 100%; margin: 0 auto; padding: 0 10px; }
+  .search-bar { margin: 10px 0; }
   .search-bar input {
-    width: 100%; padding: 12px 14px; font-size: 15px; border: 1.5px solid var(--line);
+    width: 100%; padding: 11px 13px; font-size: 15px; border: 1.5px solid var(--line);
     border-radius: 12px; outline: none; background: #fff;
   }
   .search-bar input:focus { border-color: var(--accent); }
-  .stats { font-size: 12.5px; color: var(--muted); margin: 2px 0 10px; }
+  .stats { font-size: 12px; color: var(--muted); margin: 2px 2px 8px; }
 
-  /* ---- Desktop table ---- */
-  table { width: 100%; border-collapse: collapse; font-size: 13px; background: #fff; border-radius: 10px; overflow: hidden; }
+  .table-scroll {
+    overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 10px;
+    border: 1px solid var(--line); background: #fff;
+  }
+  table { width: 100%; min-width: 980px; border-collapse: collapse; font-size: 12.5px; background: #fff; }
   thead th {
     background: var(--head-bg); color: var(--head-ink); text-align: left;
-    padding: 9px 6px; font-size: 11.5px; white-space: nowrap; font-weight: 700;
+    padding: 9px 7px; font-size: 11px; white-space: nowrap; font-weight: 700;
+    position: sticky; top: 0; z-index: 2;
   }
-  tbody td { padding: 7px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th:first-child, tbody td:first-child {
+    position: sticky; left: 0; z-index: 3; background: inherit;
+    box-shadow: 2px 0 4px rgba(0,0,0,.04);
+  }
+  thead th:first-child { z-index: 4; background: var(--head-bg); }
+  tbody td { padding: 6px 7px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  tbody tr:nth-child(even) td:first-child { background: #fff; }
+  tbody tr:nth-child(odd) td:first-child { background: #fbfdfd; }
   tbody tr:hover { background: #f5f9fa; }
-  tr.unsure td { background: var(--warn-bg); }
-  tr.unsure:hover td { background: #fdf1d8; }
-  .vendor-text { font-size: 11px; color: var(--muted); max-width: 160px; display: block; }
+  tr.unsure td { background: var(--warn-bg) !important; }
+  tr.unsure:hover td { background: #fdf1d8 !important; }
+  .vendor-text { font-size: 10.5px; color: var(--muted); max-width: 140px; display: block; line-height: 1.3; }
 
   input.cell {
-    width: 100%; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 13px;
+    width: 100%; min-width: 68px; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 12.5px;
     padding: 6px 7px; border-radius: 7px; font-family: inherit; color: var(--ink);
   }
   input.cell:focus { border-color: var(--accent); background: #fff; outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
   input.cell.changed { border-color: #d9a441; background: #fffaf0; }
   input.num { text-align: right; }
 
-  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 700; white-space: nowrap; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 10px; font-weight: 700; white-space: nowrap; }
   .badge.yes { background: var(--warn-bg); color: #8a6414; border: 1px solid var(--warn-border); }
   .badge.no { background: var(--ok-bg); color: var(--ok-ink); border: 1px solid #bfe3c9; }
+  .badge.neutral { background: #eef1f2; color: var(--muted); border: 1px solid var(--line); }
 
-  .actions-cell { display: flex; flex-direction: column; gap: 5px; min-width: 100px; }
-  .btn { border: none; border-radius: 8px; font-size: 12px; font-weight: 700; padding: 7px 10px; cursor: pointer; white-space: nowrap; }
+  .actions-cell { display: flex; flex-direction: row; gap: 5px; align-items: center; min-width: 150px; }
+  .btn { border: none; border-radius: 8px; font-size: 11.5px; font-weight: 700; padding: 7px 9px; cursor: pointer; white-space: nowrap; }
   .btn-save { background: var(--accent); color: #fff; }
   .btn-save:active { background: var(--accent-dark); }
   .btn-save:disabled { opacity: .5; }
   .btn-verify { background: #fff; color: var(--ok-strong); border: 1.5px solid var(--ok-strong); }
   .btn-verify:active { background: var(--ok-bg); }
-  .btn-verify.done { background: var(--ok-bg); color: var(--ok-ink); border-color: var(--ok-bg); cursor: default; }
-  .row-status { font-size: 10.5px; }
+  .btn-verify.done { background: var(--ok-bg); color: var(--ok-ink); border-color: var(--ok-bg); cursor: default; opacity: .85; }
+  .row-status { font-size: 10px; min-width: 50px; }
   .row-status.ok { color: var(--ok-ink); }
   .row-status.err { color: var(--err-ink); }
 
   .empty, .loading { padding: 30px; text-align: center; color: var(--muted); }
-  .footer-note { padding: 18px 14px 10px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .footer-note { padding: 14px 8px 10px; font-size: 11.5px; color: var(--muted); line-height: 1.6; }
 
-  /* ---- Toast ---- */
-  #toastHost { position: fixed; left: 0; right: 0; bottom: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; z-index: 50; }
+  #toastHost { position: fixed; left: 0; right: 0; bottom: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; z-index: 50; padding: 0 10px; }
   .toast {
     background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 10px; font-size: 13px;
-    max-width: 92%; box-shadow: 0 4px 16px rgba(0,0,0,.18); opacity: 0; transform: translateY(8px);
+    max-width: 94%; box-shadow: 0 4px 16px rgba(0,0,0,.25); opacity: 0; transform: translateY(8px);
     transition: opacity .2s, transform .2s;
   }
   .toast.show { opacity: 1; transform: translateY(0); }
@@ -99,25 +110,12 @@
   .toast.err { background: var(--err-ink); }
   .toast b { font-weight: 700; }
 
-  /* ---- Mobile cards ---- */
   @media (max-width: 760px) {
-    table, thead, tbody, tr, td, th { display: block; }
-    thead { display: none; }
-    table { background: transparent; }
-    tbody tr {
-      background: #fff; border: 1px solid var(--line); border-radius: 14px; margin: 12px 0;
-      padding: 12px 14px 14px; box-shadow: 0 1px 3px rgba(20,30,40,.05);
-    }
-    tr.unsure { border-color: var(--warn-border); background: var(--warn-bg); }
-    tbody td { border: none; padding: 7px 0; }
-    tbody td::before {
-      content: attr(data-label); display: block; font-size: 10px; font-weight: 700;
-      letter-spacing: .04em; color: var(--accent-dark); text-transform: uppercase; margin-bottom: 3px;
-    }
-    td.vendor-row::before { color: var(--muted); }
-    .vendor-text { max-width: none; font-size: 12px; }
-    .actions-cell { flex-direction: row; margin-top: 4px; }
-    .btn { flex: 1; padding: 10px; font-size: 13px; }
+    header h1 { font-size: 14.5px; }
+    table { min-width: 880px; font-size: 11.5px; }
+    .actions-cell { min-width: 128px; }
+    .btn { padding: 7px 8px; font-size: 11px; }
+    .toast { font-size: 12.5px; }
   }
 </style>
 </head>
@@ -172,7 +170,7 @@ function showToast(message, kind) {
   setTimeout(() => {
     t.classList.remove('show');
     setTimeout(() => t.remove(), 250);
-  }, 3200);
+  }, 3400);
 }
 
 function computeQty(rate, amount) {
@@ -206,8 +204,15 @@ async function loadData(showSpinner) {
 
 function renderFooter() {
   document.getElementById('footerNote').innerHTML =
-    '✏️ Yahan edit karo ya seedha Google Sheet me — dono live sync hain. "Verified" dabane se row confirmed ho jaati hai.<br>' +
+    '✏️ Yahan edit karo ya seedha Google Sheet me — dono live sync hain. "Verify" dabane se row confirmed ho jaati hai.<br>' +
     footerLines.map(esc).join('<br>');
+}
+
+function verifyState(v) {
+  const s = (v || '').trim().toLowerCase();
+  if (s === 'yes') return 'unsure';
+  if (s === 'no') return 'verified';
+  return 'unset';
 }
 
 function render(filterText) {
@@ -224,15 +229,18 @@ function render(filterText) {
     return;
   }
 
-  let out = '<table><thead><tr>' +
+  let out = '<div class="table-scroll"><table><thead><tr>' +
     '<th>Vendor</th><th>Hindi</th><th>English</th><th>Rate</th><th>Unit</th>' +
     '<th>Amount</th><th>Qty</th><th>Weight/Qty</th><th>Selling</th><th>Note</th><th>Verify</th><th>Actions</th>' +
     '</tr></thead><tbody>';
 
   for (const r of filtered) {
-    const unsure = (r.verify || '').trim().toLowerCase() === 'yes';
-    out += '<tr class="' + (unsure ? 'unsure' : '') + '" data-row="' + r.row + '">' +
-      '<td class="vendor-row" data-label="Vendor"><span class="vendor-text">' + esc(r.vendor) + '</span></td>' +
+    const vs = verifyState(r.verify);
+    const badgeClass = vs === 'unsure' ? 'yes' : (vs === 'verified' ? 'no' : 'neutral');
+    const badgeText = vs === 'unsure' ? 'Needs check' : (vs === 'verified' ? 'OK' : '—');
+    const alreadyVerified = vs === 'verified';
+    out += '<tr class="' + (vs === 'unsure' ? 'unsure' : '') + '" data-row="' + r.row + '">' +
+      '<td data-label="Vendor"><span class="vendor-text">' + esc(r.vendor) + '</span></td>' +
       '<td data-label="Hindi"><input class="cell" data-field="item_hi" value="' + esc(r.item_hi) + '"></td>' +
       '<td data-label="English"><input class="cell" data-field="item_en" value="' + esc(r.item_en) + '"></td>' +
       '<td data-label="Rate"><input class="cell num" data-field="rate" value="' + esc(r.rate) + '"></td>' +
@@ -242,15 +250,15 @@ function render(filterText) {
       '<td data-label="Weight/Qty"><input class="cell" data-field="weight" value="' + esc(r.weight) + '"></td>' +
       '<td data-label="Selling"><input class="cell num" data-field="selling" value="' + esc(r.selling) + '"></td>' +
       '<td data-label="Note"><input class="cell" data-field="note" value="' + esc(r.note) + '"></td>' +
-      '<td data-label="Verify"><span class="badge ' + (unsure ? 'yes' : 'no') + '" data-badge>' + (unsure ? 'Needs check' : (r.verify ? 'OK' : '—')) + '</span></td>' +
+      '<td data-label="Verify"><span class="badge ' + badgeClass + '" data-badge>' + badgeText + '</span></td>' +
       '<td data-label="Actions"><div class="actions-cell">' +
         '<button class="btn btn-save" data-action="save">💾 Save</button>' +
-        '<button class="btn btn-verify' + (unsure ? '' : ' done') + '" data-action="verify"' + (unsure ? '' : ' disabled') + '>' + (unsure ? '✔ Verified?' : '✅ Verified') + '</button>' +
-        '<div class="row-status"></div>' +
+        '<button class="btn btn-verify' + (alreadyVerified ? ' done' : '') + '" data-action="verify"' + (alreadyVerified ? ' disabled' : '') + '>' + (alreadyVerified ? '✅ Verified' : '✔ Verify') + '</button>' +
+        '<span class="row-status"></span>' +
       '</div></td>' +
       '</tr>';
   }
-  out += '</tbody></table>';
+  out += '</tbody></table></div>';
   host.innerHTML = out;
 
   host.querySelectorAll('button[data-action="save"]').forEach(btn => btn.addEventListener('click', onSaveRow));
@@ -260,8 +268,9 @@ function render(filterText) {
   });
 }
 
-function buildValuesFromRow(tr) {
+function buildValuesFromRow(tr, localRow) {
   const values = COLS.map(c => {
+    if (c === 'vendor') return localRow.vendor || '';
     if (c === 'qty' || c === 'verify') return '';
     const input = tr.querySelector('[data-field="' + c + '"]');
     return input ? input.value : '';
@@ -285,11 +294,11 @@ async function pushRow(rowNum, values, statusEl, btn) {
     if (data.status !== 'ok') throw new Error(data.message || 'unknown error');
     return true;
   } catch (err) {
-    if (statusEl) { statusEl.textContent = 'Error — retry'; statusEl.className = 'row-status err'; }
+    if (statusEl) { statusEl.textContent = 'Error'; statusEl.className = 'row-status err'; }
     console.error(err);
     return false;
   } finally {
-    btn.disabled = false;
+    if (!btn.classList.contains('done')) btn.disabled = false;
   }
 }
 
@@ -302,15 +311,15 @@ async function onSaveRow(e) {
 
   const changedFields = [];
   COLS.forEach(c => {
-    if (c === 'qty' || c === 'verify') return;
+    if (c === 'qty' || c === 'verify' || c === 'vendor') return;
     const input = tr.querySelector('[data-field="' + c + '"]');
     if (input && input.value !== (localRow[c] || '')) {
       changedFields.push({ field: c, value: input.value });
     }
   });
 
-  const values = buildValuesFromRow(tr);
-  values[10] = localRow.verify || ''; // keep existing verify status
+  const values = buildValuesFromRow(tr, localRow);
+  values[10] = localRow.verify || '';
   const ok = await pushRow(rowNum, values, statusEl, btn);
   if (ok) {
     COLS.forEach((c, i) => { if (c !== 'qty') localRow[c] = values[i]; });
@@ -320,7 +329,7 @@ async function onSaveRow(e) {
     statusEl.className = 'row-status ok';
     if (changedFields.length) {
       const msg = '<b>' + esc(localRow.item_hi || localRow.item_en || 'Item') + '</b> update ho gaya — ' +
-        changedFields.map(f => (LABELS[f.field] || f.field) + ': <b>' + esc(f.value || '—') + '</b>').join(', ');
+        changedFields.map(fl => (LABELS[fl.field] || fl.field) + ': <b>' + esc(fl.value || '—') + '</b>').join(', ');
       showToast(msg, 'ok');
     } else {
       showToast('Koi change nahi tha, phir bhi save kar diya ✓', 'ok');
@@ -337,8 +346,8 @@ async function onVerifyRow(e) {
   const localRow = allRows.find(r => r.row === rowNum);
   const statusEl = tr.querySelector('.row-status');
 
-  const values = buildValuesFromRow(tr);
-  values[10] = 'No'; // mark verified -> needs-verification = No
+  const values = buildValuesFromRow(tr, localRow);
+  values[10] = 'No';
   const ok = await pushRow(rowNum, values, statusEl, btn);
   if (ok) {
     COLS.forEach((c, i) => { if (c !== 'qty') localRow[c] = values[i]; });
