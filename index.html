@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Balaji Traders &amp; A.P. Traders - Rate List</title>
+<style>
+  :root {
+    --ink:#2b3440; --muted:#7a8690; --line:#dde4e8;
+    --accent:#3f7d8c; --accent-dark:#2c5964;
+    --warn-bg:#fff8e8; --warn-border:#d9a441;
+    --head-bg:#e8f2f3; --head-ink:#2c5964;
+    --ok-bg:#e6f4ea; --ok-ink:#1e7a3c;
+    --err-bg:#fdeceb; --err-ink:#b3261e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Segoe UI", "Noto Sans Devanagari", Arial, sans-serif;
+    color: var(--ink); background: #fbfcfc; margin: 0; padding: 0 0 48px;
+  }
+  header {
+    background: linear-gradient(135deg,#eaf6f2,#eef3fb 55%,#fdf3e9);
+    padding: 18px 16px 14px; border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 5;
+  }
+  header h1 { margin: 0 0 4px; font-size: 19px; color: var(--accent-dark); }
+  header .sub { color: var(--muted); font-size: 12.5px; margin-bottom: 8px; }
+  .sync-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 600;
+  }
+  .sync-pill.connecting { background: #eef3fb; color: var(--accent-dark); border: 1px solid #cfe0e6; }
+  .sync-pill.online { background: var(--ok-bg); color: var(--ok-ink); border: 1px solid #bfe3c9; }
+  .sync-pill.offline { background: var(--err-bg); color: var(--err-ink); border: 1px solid #f2c6c2; }
+  .refresh-btn {
+    margin-left: 8px; font-size: 12px; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--line); background: #fff; cursor: pointer; color: var(--accent-dark);
+  }
+  .wrap { max-width: 1500px; margin: 0 auto; padding: 0 12px; }
+  .search-bar { margin: 12px 0; }
+  .search-bar input {
+    width: 100%; padding: 11px 14px; font-size: 15px; border: 1px solid var(--line);
+    border-radius: 10px; outline: none;
+  }
+  .search-bar input:focus { border-color: var(--accent); }
+  .stats { font-size: 12.5px; color: var(--muted); margin: 2px 0 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; background: #fff; }
+  thead th {
+    background: var(--head-bg); color: var(--head-ink); text-align: left;
+    padding: 8px 6px; font-size: 11.5px; white-space: nowrap;
+  }
+  tbody td { padding: 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:hover { background: #f5f9fa; }
+  tr.unsure td { background: var(--warn-bg); }
+  tr.unsure:hover td { background: #fdf1d8; }
+  .vendor { font-size: 11px; color: var(--muted); max-width: 160px; }
+  .hi { font-weight: 600; }
+  .en { color: var(--muted); font-size: 11.5px; }
+  input.cell {
+    width: 100%; border: 1px solid transparent; background: transparent; font-size: 13px;
+    padding: 3px 4px; border-radius: 5px; font-family: inherit; color: inherit;
+  }
+  input.cell:hover { border-color: var(--line); }
+  input.cell:focus { border-color: var(--accent); background: #fff; outline: none; }
+  input.num { text-align: right; }
+  .note-cell { max-width: 240px; }
+  .save-btn {
+    font-size: 11.5px; padding: 4px 9px; border-radius: 6px; border: 1px solid var(--accent);
+    background: #fff; color: var(--accent-dark); cursor: pointer; white-space: nowrap;
+  }
+  .save-btn:disabled { opacity: .5; cursor: default; }
+  .row-status { font-size: 10.5px; margin-top: 2px; }
+  .row-status.ok { color: var(--ok-ink); }
+  .row-status.err { color: var(--err-ink); }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 600; }
+  .badge.yes { background: var(--warn-bg); color: #8a6414; border: 1px solid var(--warn-border); }
+  .badge.no { background: var(--ok-bg); color: var(--ok-ink); }
+  .empty, .loading { padding: 30px; text-align: center; color: var(--muted); }
+  .footer-note { padding: 16px 14px; font-size: 12px; color: var(--muted); }
+  @media (max-width: 760px) {
+    table, thead, tbody, tr, td, th { display: block; }
+    thead { display: none; }
+    tbody tr { border: 1px solid var(--line); border-radius: 10px; margin: 10px 0; padding: 8px 10px; }
+    tbody td { border: none; padding: 4px 0; }
+    tbody td::before { content: attr(data-label); display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sri Balaji Traders &amp; A.P. Traders — Rate List</h1>
+  <div class="sub">Wholesale Perfume &amp; General Stock · Tirupati</div>
+  <span id="syncPill" class="sync-pill connecting">⏳ Connecting…</span>
+  <button class="refresh-btn" id="refreshBtn">🔄 Refresh</button>
+</header>
+<div class="wrap">
+  <div class="search-bar">
+    <input id="searchBox" type="text" placeholder="Item ढूंढें... (Hindi/English/vendor)" autocomplete="off">
+  </div>
+  <div class="stats" id="statsLine"></div>
+  <div id="tableHost"><div class="loading">Loading…</div></div>
+  <div class="footer-note" id="footerNote"></div>
+</div>
+<script>
+// ====== CONFIG: paste your Apps Script Web App URL here ======
+const API_URL = "https://script.google.com/macros/s/AKfycbxc19MtnIOcHvsXV8mib9z2pDDTSzH6J4Xi9pC45kl1GHbTHuc8ll9-_sVr8gN4MPQgFg/exec";
+// ===============================================================
+
+const COLS = ['vendor','item_hi','item_en','rate','unit','amount','qty','weight','selling','note','verify'];
+const DATA_START_ROW = 4; // 1-based row number in the sheet where data begins
+let allRows = []; // {row:number, vendor,item_hi,...}
+let footerLines = [];
+let pollTimer = null;
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = (s === undefined || s === null) ? '' : String(s);
+  return d.innerHTML;
+}
+
+function setPill(state, text) {
+  const el = document.getElementById('syncPill');
+  el.className = 'sync-pill ' + state;
+  el.textContent = text;
+}
+
+function computeQty(rate, amount) {
+  const r = parseFloat(rate), a = parseFloat(amount);
+  if (!isNaN(r) && r > 0 && !isNaN(a)) return (a / r).toFixed(1);
+  return '';
+}
+
+async function loadData(showSpinner) {
+  if (showSpinner) setPill('connecting', '⏳ Syncing…');
+  try {
+    const res = await fetch(API_URL, { method: 'GET', cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const values = data.values || [];
+    // row 1,2 = title/subtitle, row 3 = header, last 2 = footer, rest = data
+    footerLines = values.slice(-2).map(r => r[0]).filter(Boolean);
+    const dataRows = values.slice(3, values.length - 2);
+    allRows = dataRows.map((r, idx) => {
+      const obj = { row: DATA_START_ROW + idx, _dirty: false };
+      COLS.forEach((c, i) => obj[c] = r[i] !== undefined ? r[i] : '');
+      return obj;
+    });
+    setPill('online', '🟢 Live — Sheet se connected');
+    renderFooter();
+    render(document.getElementById('searchBox').value);
+  } catch (err) {
+    setPill('offline', '🔴 Connect नहीं हो पाया — फिर कोशिश हो रही है');
+    console.error(err);
+  }
+}
+
+function renderFooter() {
+  document.getElementById('footerNote').innerHTML =
+    '✏️ Yahan edit karo ya seedha Google Sheet me — dono live sync hain.<br>' +
+    footerLines.map(esc).join('<br>');
+}
+
+function render(filterText) {
+  const host = document.getElementById('tableHost');
+  const f = (filterText || '').trim().toLowerCase();
+  const filtered = allRows.filter(r => {
+    if (!f) return true;
+    return (r.vendor + ' ' + r.item_hi + ' ' + r.item_en + ' ' + r.note).toLowerCase().includes(f);
+  });
+  document.getElementById('statsLine').textContent = filtered.length + ' / ' + allRows.length + ' items';
+
+  if (filtered.length === 0) {
+    host.innerHTML = '<div class="empty">कुछ नहीं मिला</div>';
+    return;
+  }
+
+  let out = '<table><thead><tr>' +
+    '<th>Vendor</th><th>Hindi</th><th>English</th><th>Rate</th><th>Unit</th>' +
+    '<th>Amount</th><th>Qty</th><th>Weight/Qty</th><th>Selling</th><th>Note</th><th>Verify</th><th></th>' +
+    '</tr></thead><tbody>';
+
+  for (const r of filtered) {
+    const unsure = (r.verify || '').trim().toLowerCase() === 'yes';
+    out += '<tr class="' + (unsure ? 'unsure' : '') + '" data-row="' + r.row + '">' +
+      '<td class="vendor" data-label="Vendor">' + esc(r.vendor) + '</td>' +
+      '<td class="hi" data-label="Hindi"><input class="cell" data-field="item_hi" value="' + esc(r.item_hi) + '"></td>' +
+      '<td class="en" data-label="English"><input class="cell" data-field="item_en" value="' + esc(r.item_en) + '"></td>' +
+      '<td data-label="Rate"><input class="cell num" data-field="rate" value="' + esc(r.rate) + '"></td>' +
+      '<td data-label="Unit"><input class="cell" data-field="unit" value="' + esc(r.unit) + '"></td>' +
+      '<td data-label="Amount"><input class="cell num" data-field="amount" value="' + esc(r.amount) + '"></td>' +
+      '<td class="num" data-label="Qty">' + esc(r.qty || computeQty(r.rate, r.amount)) + '</td>' +
+      '<td data-label="Weight/Qty"><input class="cell" data-field="weight" value="' + esc(r.weight) + '"></td>' +
+      '<td data-label="Selling"><input class="cell num" data-field="selling" value="' + esc(r.selling) + '"></td>' +
+      '<td class="note-cell" data-label="Note"><input class="cell" data-field="note" value="' + esc(r.note) + '"></td>' +
+      '<td data-label="Verify"><span class="badge ' + (unsure ? 'yes' : 'no') + '">' + (unsure ? 'Verify' : (r.verify ? 'OK' : '')) + '</span></td>' +
+      '<td data-label=""><button class="save-btn" data-action="save">Save</button><div class="row-status"></div></td>' +
+      '</tr>';
+  }
+  out += '</tbody></table>';
+  host.innerHTML = out;
+
+  host.querySelectorAll('button[data-action="save"]').forEach(btn => {
+    btn.addEventListener('click', onSaveRow);
+  });
+}
+
+async function onSaveRow(e) {
+  const btn = e.currentTarget;
+  const tr = btn.closest('tr');
+  const rowNum = parseInt(tr.getAttribute('data-row'), 10);
+  const statusEl = tr.querySelector('.row-status');
+  const values = COLS.map(c => {
+    if (c === 'qty') return ''; // formula-ish column, leave as-is; sheet keeps whatever was there
+    const input = tr.querySelector('[data-field="' + c + '"]');
+    return input ? input.value : '';
+  });
+  // fill qty from rate/amount for storage
+  const rateVal = tr.querySelector('[data-field="rate"]').value;
+  const amountVal = tr.querySelector('[data-field="amount"]').value;
+  values[6] = computeQty(rateVal, amountVal);
+
+  btn.disabled = true;
+  statusEl.textContent = 'Saving…';
+  statusEl.className = 'row-status';
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'update', row: rowNum, values: values })
+    });
+    const data = await res.json();
+    if (data.status === 'ok') {
+      statusEl.textContent = 'Saved ✓';
+      statusEl.className = 'row-status ok';
+      const localRow = allRows.find(r => r.row === rowNum);
+      if (localRow) COLS.forEach((c, i) => localRow[c] = values[i]);
+    } else {
+      throw new Error(data.message || 'unknown error');
+    }
+  } catch (err) {
+    statusEl.textContent = 'Error — retry';
+    statusEl.className = 'row-status err';
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('searchBox').addEventListener('input', (e) => render(e.target.value));
+document.getElementById('refreshBtn').addEventListener('click', () => loadData(true));
+
+loadData(true);
+pollTimer = setInterval(() => loadData(false), 30000); // background refresh every 30s to pick up others' edits
+</script>
+</body>
+</html>
