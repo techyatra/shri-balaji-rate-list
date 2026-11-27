@@ -80,8 +80,8 @@
     overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 10px;
     border: 1px solid var(--line); background: #fff;
   }
-  table { width: 100%; min-width: 1015px; border-collapse: collapse; font-size: 12.5px; background: #fff; table-layout: fixed; }
-  col.c-vendor { width: 110px; } col.c-hi { width: 120px; } col.c-en { width: 110px; }
+  table { width: 100%; min-width: 1055px; border-collapse: collapse; font-size: 12.5px; background: #fff; table-layout: fixed; }
+  col.c-seq { width: 40px; } col.c-vendor { width: 110px; } col.c-hi { width: 120px; } col.c-en { width: 110px; }
   col.c-rate { width: 70px; } col.c-unit { width: 60px; } col.c-amount { width: 80px; }
   col.c-qty { width: 50px; } col.c-selling { width: 75px; }
   col.c-note { width: 135px; } col.c-verify { width: 70px; } col.c-actions { width: 150px; }
@@ -90,14 +90,19 @@
     padding: 9px 7px; font-size: 11px; white-space: nowrap; font-weight: 700;
     position: sticky; top: 0; z-index: 2;
   }
+  thead th:nth-child(2), tbody td:nth-child(2) {
+    position: sticky; left: 40px; z-index: 3; background: inherit;
+    box-shadow: 2px 0 4px rgba(0,0,0,.04);
+  }
+  thead th:nth-child(2) { z-index: 4; background: var(--head-bg); }
   thead th:first-child, tbody td:first-child {
     position: sticky; left: 0; z-index: 3; background: inherit;
-    box-shadow: 2px 0 4px rgba(0,0,0,.04);
+    text-align: center; color: var(--muted); font-weight: 700;
   }
   thead th:first-child { z-index: 4; background: var(--head-bg); }
   tbody td { padding: 6px 7px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-  tbody tr:nth-child(even) td:first-child { background: #fff; }
-  tbody tr:nth-child(odd) td:first-child { background: #fbfdfd; }
+  tbody tr:nth-child(even) td:first-child, tbody tr:nth-child(even) td:nth-child(2) { background: #fff; }
+  tbody tr:nth-child(odd) td:first-child, tbody tr:nth-child(odd) td:nth-child(2) { background: #fbfdfd; }
   tbody tr:hover { background: #f5f9fa; }
   tr.unsure td { background: var(--warn-bg) !important; }
   tr.unsure:hover td { background: #fdf1d8 !important; }
@@ -144,7 +149,7 @@
 
   @media (max-width: 760px) {
     header h1 { font-size: 14.5px; }
-    table { min-width: 930px; font-size: 11px; }
+    table { min-width: 970px; font-size: 11px; }
     .btn { padding: 6px 7px; font-size: 10.5px; }
     .toast { font-size: 12.5px; }
   }
@@ -239,7 +244,7 @@ async function loadData(showSpinner) {
     footerLines = values.slice(-2).map(r => r[0]).filter(Boolean);
     const dataRows = values.slice(3, values.length - 2);
     allRows = dataRows.map((r, idx) => {
-      const obj = { row: DATA_START_ROW + idx };
+      const obj = { row: DATA_START_ROW + idx, seq: r[11] !== undefined && r[11] !== '' ? r[11] : (idx + 1) };
       COLS.forEach((c, i) => obj[c] = r[i] !== undefined ? r[i] : '');
       return obj;
     });
@@ -280,11 +285,11 @@ function render(filterText) {
   }
 
   let out = '<div class="table-scroll"><table>' +
-    '<colgroup><col class="c-vendor"><col class="c-hi"><col class="c-en"><col class="c-rate"><col class="c-unit">' +
+    '<colgroup><col class="c-seq"><col class="c-vendor"><col class="c-hi"><col class="c-en"><col class="c-rate"><col class="c-unit">' +
     '<col class="c-amount"><col class="c-qty"><col class="c-selling"><col class="c-note">' +
     '<col class="c-verify"><col class="c-actions"></colgroup>' +
     '<thead><tr>' +
-    '<th>Vendor</th><th>Hindi</th><th>English</th><th>Rate</th><th>Unit</th>' +
+    '<th>#</th><th>Vendor</th><th>Hindi</th><th>English</th><th>Rate</th><th>Unit</th>' +
     '<th>Amount</th><th>Qty</th><th>Selling</th><th>Note</th><th>Verify</th><th>Actions</th>' +
     '</tr></thead><tbody>';
 
@@ -294,6 +299,7 @@ function render(filterText) {
     const badgeText = vs === 'unsure' ? 'Needs check' : (vs === 'verified' ? 'OK' : '—');
     const alreadyVerified = vs === 'verified';
     out += '<tr class="' + (vs === 'unsure' ? 'unsure' : '') + '" data-row="' + r.row + '">' +
+      '<td data-label="#">' + esc(r.seq) + '</td>' +
       '<td data-label="Vendor"><span class="vendor-text">' + esc(r.vendor) + '</span></td>' +
       '<td data-label="Hindi"><input class="cell" data-field="item_hi" value="' + esc(r.item_hi) + '"></td>' +
       '<td data-label="English"><input class="cell" data-field="item_en" value="' + esc(r.item_en) + '"></td>' +
