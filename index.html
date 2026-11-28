@@ -76,6 +76,65 @@
   .add-status.ok { color: var(--ok-ink); }
   .add-status.err { color: var(--err-ink); }
 
+  .bill-toggle-btn {
+    flex-shrink: 0; padding: 0 14px; font-size: 14px; font-weight: 700; border-radius: 12px;
+    border: none; background: #8a5a2c; color: #fff; cursor: pointer;
+  }
+  .bill-toggle-btn:active { background: #6e4722; }
+  .bill-panel {
+    display: none; background: #fff; border: 1.5px solid #8a5a2c; border-radius: 12px;
+    padding: 14px; margin-bottom: 12px;
+  }
+  .bill-panel.open { display: block; }
+  .bill-panel h3 { margin: 0 0 10px; font-size: 14px; color: #6e4722; }
+  .bill-head-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 9px; margin-bottom: 12px;
+  }
+  .bill-head-grid label { font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 3px; }
+  .bill-head-grid input, .bill-head-grid select {
+    width: 100%; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 13px;
+    padding: 8px 9px; border-radius: 8px; font-family: inherit; color: var(--ink);
+  }
+  .bill-head-grid input:focus, .bill-head-grid select:focus { border-color: #8a5a2c; background: #fff; outline: none; }
+  .bill-search-wrap { position: relative; margin-bottom: 10px; }
+  .bill-search-wrap input {
+    width: 100%; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 13.5px;
+    padding: 10px 11px; border-radius: 8px; font-family: inherit; color: var(--ink);
+  }
+  .bill-search-wrap input:focus { border-color: #8a5a2c; background: #fff; outline: none; }
+  .bill-suggest {
+    display: none; position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 20;
+    background: #fff; border: 1.5px solid var(--line); border-radius: 10px; max-height: 210px;
+    overflow-y: auto; box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  }
+  .bill-suggest.open { display: block; }
+  .bill-suggest-item { padding: 9px 12px; font-size: 13px; cursor: pointer; border-bottom: 1px solid var(--line); }
+  .bill-suggest-item:last-child { border-bottom: none; }
+  .bill-suggest-item:hover, .bill-suggest-item.active { background: var(--accent-soft); }
+  .bill-suggest-item .s-sub { font-size: 10.5px; color: var(--muted); }
+  .bill-add-row { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 12px; flex-wrap: wrap; }
+  .bill-add-row .picked { flex: 1 1 180px; font-size: 13px; padding: 9px 10px; background: var(--field-bg); border-radius: 8px; border: 1.5px solid var(--line); min-height: 38px; }
+  .bill-add-row .picked.empty { color: var(--muted); }
+  .bill-add-row input { width: 80px; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 13px; padding: 9px 9px; border-radius: 8px; font-family: inherit; }
+  .bill-add-row label { font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 3px; }
+  .btn-bill-add { background: #8a5a2c; color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .btn-bill-add:disabled { opacity: .5; }
+  table.bill-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 10px; }
+  table.bill-table th { text-align: left; font-size: 10.5px; color: var(--muted); text-transform: uppercase; padding: 5px 6px; border-bottom: 1.5px solid var(--line); }
+  table.bill-table td { padding: 6px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  table.bill-table input { width: 100%; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 13px; padding: 5px 6px; border-radius: 6px; font-family: inherit; text-align: right; }
+  table.bill-table .btn-rm { background: var(--err-bg); color: var(--err-ink); border: none; border-radius: 6px; padding: 5px 8px; font-size: 11px; cursor: pointer; }
+  .bill-totals { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; font-size: 13.5px; margin-bottom: 12px; }
+  .bill-totals .trow { display: flex; gap: 14px; align-items: center; }
+  .bill-totals .trow input { width: 100px; border: 1.5px solid var(--line); background: var(--field-bg); font-size: 13px; padding: 6px 8px; border-radius: 6px; text-align: right; font-family: inherit; }
+  .bill-totals .grand { font-size: 16px; font-weight: 800; color: #6e4722; }
+  .bill-actions { display: flex; gap: 8px; }
+  .btn-bill-print { background: #6e4722; color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-size: 13.5px; font-weight: 700; cursor: pointer; }
+  .btn-bill-clear { background: #fff; color: var(--muted); border: 1.5px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 13.5px; cursor: pointer; }
+  .bill-empty-hint { font-size: 12.5px; color: var(--muted); padding: 10px 0; text-align: center; }
+
+  #printArea { display: none; }
+
   .table-scroll {
     overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 10px;
     border: 1px solid var(--line); background: #fff;
@@ -153,6 +212,30 @@
     .btn { padding: 6px 7px; font-size: 10.5px; }
     .toast { font-size: 12.5px; }
   }
+
+  @media print {
+    body * { visibility: hidden; }
+    #printArea, #printArea * { visibility: visible; }
+    #printArea {
+      display: block; position: absolute; left: 0; top: 0; width: 100%;
+      padding: 18px; font-family: Arial, "Noto Sans Devanagari", sans-serif; color: #000;
+    }
+    .pr-head { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 14px; }
+    .pr-head h2 { margin: 0 0 3px; font-size: 19px; }
+    .pr-head .pr-sub { font-size: 12px; color: #333; }
+    .pr-title { text-align: center; font-size: 15px; font-weight: 700; margin: 8px 0 14px; text-decoration: underline; }
+    .pr-meta { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 12px; }
+    .pr-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .pr-table th, .pr-table td { border: 1px solid #000; padding: 6px 8px; }
+    .pr-table th { background: #eee; text-align: left; }
+    .pr-table td.num, .pr-table th.num { text-align: right; }
+    .pr-totals { width: 100%; margin-top: 2px; border-collapse: collapse; font-size: 13px; }
+    .pr-totals td { padding: 5px 8px; border: none; }
+    .pr-totals td.lbl { text-align: right; color: #333; }
+    .pr-totals td.val { text-align: right; width: 120px; font-weight: 700; }
+    .pr-totals tr.grand td { font-size: 15px; font-weight: 800; border-top: 2px solid #000; }
+    .pr-foot { margin-top: 30px; display: flex; justify-content: space-between; font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -168,6 +251,48 @@
   <div class="search-bar">
     <input id="searchBox" type="text" placeholder="Item ढूंढें... (Hindi/English/vendor)" autocomplete="off">
     <button class="add-toggle-btn" id="addToggleBtn">+ Add Item</button>
+    <button class="bill-toggle-btn" id="billToggleBtn">🧾 New Bill</button>
+  </div>
+  <div class="bill-panel" id="billPanel">
+    <h3>नया Bill बनाएं</h3>
+    <div class="bill-head-grid">
+      <div><label>Type</label>
+        <select id="bill_type">
+          <option value="Quotation">Quotation</option>
+          <option value="Kaccha Bill">Kaccha Bill</option>
+          <option value="Challan">Challan</option>
+        </select>
+      </div>
+      <div><label>Customer Name</label><input id="bill_customer" placeholder="Customer ka naam"></div>
+      <div><label>Date</label><input id="bill_date" readonly></div>
+    </div>
+
+    <div class="bill-search-wrap">
+      <input id="billSearch" type="text" placeholder="SKU search karein (Hindi/English)..." autocomplete="off">
+      <div class="bill-suggest" id="billSuggest"></div>
+    </div>
+    <div class="bill-add-row">
+      <div>
+        <label>Picked Item</label>
+        <div class="picked empty" id="billPicked">Koi item select nahi kiya</div>
+      </div>
+      <div><label>Qty</label><input id="bill_qty" inputmode="decimal" value="1"></div>
+      <div><label>Rate (₹)</label><input id="bill_rate" inputmode="decimal"></div>
+      <button class="btn-bill-add" id="billAddBtn" disabled>➕ Bill me jodein</button>
+    </div>
+
+    <div id="billTableHost"><div class="bill-empty-hint">Abhi koi item bill me nahi hai — upar search karke add karein</div></div>
+
+    <div class="bill-totals">
+      <div class="trow"><span>Subtotal</span><span id="billSubtotal">₹0</span></div>
+      <div class="trow"><span>Discount (₹)</span><input id="bill_discount" inputmode="decimal" value="0"></div>
+      <div class="trow grand"><span>Grand Total</span><span id="billGrandTotal">₹0</span></div>
+    </div>
+
+    <div class="bill-actions">
+      <button class="btn-bill-print" id="billPrintBtn">🖨️ Print / Save PDF</button>
+      <button class="btn-bill-clear" id="billClearBtn">Clear</button>
+    </div>
   </div>
   <div class="add-panel" id="addPanel">
     <h3>नया item जोड़ें</h3>
@@ -192,6 +317,7 @@
   <div class="footer-note" id="footerNote"></div>
 </div>
 <div id="toastHost"></div>
+<div id="printArea"></div>
 <script>
 // ====== CONFIG ======
 const API_URL = "https://script.google.com/macros/s/AKfycbxc19MtnIOcHvsXV8mib9z2pDDTSzH6J4Xi9pC45kl1GHbTHuc8ll9-_sVr8gN4MPQgFg/exec";
@@ -499,6 +625,206 @@ addSubmitBtn.addEventListener('click', async () => {
   } finally {
     addSubmitBtn.disabled = false;
   }
+});
+
+// ====== BILL / QUOTATION ======
+const billToggleBtn = document.getElementById('billToggleBtn');
+const billPanel = document.getElementById('billPanel');
+const billSearch = document.getElementById('billSearch');
+const billSuggest = document.getElementById('billSuggest');
+const billPicked = document.getElementById('billPicked');
+const billQtyInp = document.getElementById('bill_qty');
+const billRateInp = document.getElementById('bill_rate');
+const billAddBtn = document.getElementById('billAddBtn');
+const billTableHost = document.getElementById('billTableHost');
+const billSubtotalEl = document.getElementById('billSubtotal');
+const billDiscountInp = document.getElementById('bill_discount');
+const billGrandTotalEl = document.getElementById('billGrandTotal');
+const billPrintBtn = document.getElementById('billPrintBtn');
+const billClearBtn = document.getElementById('billClearBtn');
+const billTypeSel = document.getElementById('bill_type');
+const billCustomerInp = document.getElementById('bill_customer');
+const billDateInp = document.getElementById('bill_date');
+
+let billItems = [];
+let billSelectedItem = null;
+
+function todayStr() {
+  const d = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  return pad(d.getDate()) + '-' + pad(d.getMonth() + 1) + '-' + d.getFullYear();
+}
+
+function money(n) {
+  const v = Number(n) || 0;
+  return '₹' + v.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+}
+
+function openBillPanel() {
+  billPanel.classList.add('open');
+  billToggleBtn.textContent = '✕ Close';
+  billDateInp.value = todayStr();
+}
+
+billToggleBtn.addEventListener('click', () => {
+  const opening = !billPanel.classList.contains('open');
+  if (opening) { openBillPanel(); }
+  else { billPanel.classList.remove('open'); billToggleBtn.textContent = '🧾 New Bill'; }
+  if (addPanel.classList.contains('open')) { addPanel.classList.remove('open'); addToggleBtn.textContent = '+ Add Item'; }
+});
+
+billSearch.addEventListener('input', () => {
+  const f = billSearch.value.trim().toLowerCase();
+  if (!f) { billSuggest.classList.remove('open'); billSuggest.innerHTML = ''; return; }
+  const matches = allRows.filter(r =>
+    (r.item_hi + ' ' + r.item_en).toLowerCase().includes(f)
+  ).slice(0, 8);
+  if (!matches.length) {
+    billSuggest.innerHTML = '<div class="bill-suggest-item">कोई match नहीं मिला</div>';
+    billSuggest.classList.add('open');
+    return;
+  }
+  billSuggest.innerHTML = matches.map((r, i) =>
+    '<div class="bill-suggest-item" data-idx="' + i + '">' +
+      esc(r.item_hi || r.item_en) +
+      (r.item_hi && r.item_en ? ' <span class="s-sub">(' + esc(r.item_en) + ')</span>' : '') +
+      '<div class="s-sub">' + esc(r.unit || '') + (r.selling ? ' · Selling ₹' + esc(r.selling) : (r.rate ? ' · Rate ₹' + esc(r.rate) : '')) + '</div>' +
+    '</div>'
+  ).join('');
+  billSuggest.classList.add('open');
+  billSuggest.querySelectorAll('.bill-suggest-item[data-idx]').forEach(el => {
+    el.addEventListener('mousedown', (ev) => {
+      ev.preventDefault();
+      const r = matches[parseInt(el.getAttribute('data-idx'), 10)];
+      billSelectedItem = r;
+      billPicked.textContent = r.item_hi || r.item_en;
+      billPicked.classList.remove('empty');
+      billRateInp.value = r.selling || r.rate || '';
+      billQtyInp.value = '1';
+      billSuggest.classList.remove('open');
+      billSearch.value = '';
+      billAddBtn.disabled = false;
+      billQtyInp.focus();
+    });
+  });
+});
+
+billSearch.addEventListener('blur', () => setTimeout(() => billSuggest.classList.remove('open'), 150));
+
+billAddBtn.addEventListener('click', () => {
+  if (!billSelectedItem) return;
+  const qty = parseFloat(billQtyInp.value) || 1;
+  const rate = parseFloat(billRateInp.value) || 0;
+  billItems.push({
+    item_hi: billSelectedItem.item_hi,
+    item_en: billSelectedItem.item_en,
+    unit: billSelectedItem.unit,
+    qty, rate
+  });
+  billSelectedItem = null;
+  billPicked.textContent = 'Koi item select nahi kiya';
+  billPicked.classList.add('empty');
+  billQtyInp.value = '1';
+  billRateInp.value = '';
+  billAddBtn.disabled = true;
+  renderBillTable();
+});
+
+function renderBillTable() {
+  if (!billItems.length) {
+    billTableHost.innerHTML = '<div class="bill-empty-hint">Abhi koi item bill me nahi hai — upar search karke add karein</div>';
+    recalcBillTotals();
+    return;
+  }
+  let out = '<table class="bill-table"><thead><tr>' +
+    '<th>#</th><th>Item</th><th>Unit</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th><th></th>' +
+    '</tr></thead><tbody>';
+  billItems.forEach((it, i) => {
+    const amt = (it.qty * it.rate) || 0;
+    out += '<tr data-i="' + i + '">' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td>' + esc(it.item_hi || it.item_en) + '</td>' +
+      '<td>' + esc(it.unit || '') + '</td>' +
+      '<td><input class="b-qty num" data-i="' + i + '" value="' + it.qty + '"></td>' +
+      '<td><input class="b-rate num" data-i="' + i + '" value="' + it.rate + '"></td>' +
+      '<td class="num">' + money(amt) + '</td>' +
+      '<td><button class="btn-rm" data-i="' + i + '">✕</button></td>' +
+      '</tr>';
+  });
+  out += '</tbody></table>';
+  billTableHost.innerHTML = out;
+  billTableHost.querySelectorAll('.b-qty, .b-rate').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const i = parseInt(inp.getAttribute('data-i'), 10);
+      const val = parseFloat(inp.value) || 0;
+      if (inp.classList.contains('b-qty')) billItems[i].qty = val; else billItems[i].rate = val;
+      renderBillTable();
+    });
+  });
+  billTableHost.querySelectorAll('.btn-rm').forEach(btn => {
+    btn.addEventListener('click', () => {
+      billItems.splice(parseInt(btn.getAttribute('data-i'), 10), 1);
+      renderBillTable();
+    });
+  });
+  recalcBillTotals();
+}
+
+function recalcBillTotals() {
+  const subtotal = billItems.reduce((s, it) => s + (it.qty * it.rate || 0), 0);
+  const discount = parseFloat(billDiscountInp.value) || 0;
+  const grand = Math.max(0, subtotal - discount);
+  billSubtotalEl.textContent = money(subtotal);
+  billGrandTotalEl.textContent = money(grand);
+}
+
+billDiscountInp.addEventListener('input', recalcBillTotals);
+
+billClearBtn.addEventListener('click', () => {
+  billItems = [];
+  billSelectedItem = null;
+  billCustomerInp.value = '';
+  billDiscountInp.value = '0';
+  billPicked.textContent = 'Koi item select nahi kiya';
+  billPicked.classList.add('empty');
+  billAddBtn.disabled = true;
+  renderBillTable();
+});
+
+billPrintBtn.addEventListener('click', () => {
+  if (!billItems.length) {
+    showToast('Pehle kam se kam ek item bill me add karein', 'err');
+    return;
+  }
+  const customer = billCustomerInp.value.trim() || '—';
+  const type = billTypeSel.value;
+  const subtotal = billItems.reduce((s, it) => s + (it.qty * it.rate || 0), 0);
+  const discount = parseFloat(billDiscountInp.value) || 0;
+  const grand = Math.max(0, subtotal - discount);
+
+  let rows = '';
+  billItems.forEach((it, i) => {
+    rows += '<tr>' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td>' + esc(it.item_hi || '') + (it.item_en ? ' <small>(' + esc(it.item_en) + ')</small>' : '') + '</td>' +
+      '<td class="num">' + esc(it.qty) + ' ' + esc(it.unit || '') + '</td>' +
+      '<td class="num">' + money(it.rate) + '</td>' +
+      '<td class="num">' + money(it.qty * it.rate) + '</td>' +
+      '</tr>';
+  });
+
+  document.getElementById('printArea').innerHTML =
+    '<div class="pr-head"><h2>Sri Balaji Traders &amp; A.P. Traders</h2><div class="pr-sub">Wholesale Perfume &amp; General Stock · Tirupati</div></div>' +
+    '<div class="pr-title">' + esc(type) + '</div>' +
+    '<div class="pr-meta"><span><b>Customer:</b> ' + esc(customer) + '</span><span><b>Date:</b> ' + esc(billDateInp.value || todayStr()) + '</span></div>' +
+    '<table class="pr-table"><thead><tr><th>#</th><th>Item</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody>' +
+    rows + '</tbody></table>' +
+    '<table class="pr-totals"><tr><td class="lbl">Subtotal</td><td class="val">' + money(subtotal) + '</td></tr>' +
+    (discount > 0 ? '<tr><td class="lbl">Discount</td><td class="val">- ' + money(discount) + '</td></tr>' : '') +
+    '<tr class="grand"><td class="lbl">Grand Total</td><td class="val">' + money(grand) + '</td></tr></table>' +
+    '<div class="pr-foot"><span>Customer Signature</span><span>For Sri Balaji Traders &amp; A.P. Traders</span></div>';
+
+  window.print();
 });
 
 loadData(true);
